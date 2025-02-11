@@ -93,6 +93,8 @@ class TareasView extends StatelessWidget {
 
   crearTarea(BuildContext context) async {
 
+    TareasController tareasController = context.read();
+
     DialogoCrearTareaResponse? valores = await showDialog(
       context: context,
       builder: (context) => dialogoCrearTarea(context),
@@ -100,8 +102,9 @@ class TareasView extends StatelessWidget {
 
 
     if (valores != null){
-      print(valores.descripcion);
-      print(valores.titulo);
+
+      await tareasController.crearTarea(valores.titulo, valores.descripcion);
+
     }
 
   }
