@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareas_app/entities/tarea_entity.dart';
+import 'package:tareas_app/params/tarea_params.dart';
 
 const String TAREAS = "tareas";
 
@@ -7,35 +8,38 @@ const String TAREAS = "tareas";
 class TareaModel {
 
   FirebaseFirestore firestore;
+  late CollectionReference<TareaParams> crearTareaColRef;
+  late CollectionReference<TareaEntity> obtenerTareasColRef;
 
   TareaModel({
     required this.firestore
-  });
+  }) {
+    crearTareaColRef = firestore.collection(TAREAS).withConverter(
+      fromFirestore: (snapshot, options) => throw UnimplementedError(),
+      toFirestore: (TareaParams params, _) => params.toFirestore(),
+    );
 
-  Future<TareaEntity> crearTarea(String titulo, String descripcion, DateTime fecha, bool completado) async {
+    obtenerTareasColRef = firestore.collection(TAREAS).withConverter(
+      fromFirestore: TareaEntity.fromFirestore,
+      toFirestore: (value, options) => throw UnimplementedError(),
+    );
+  }
 
-    Map<String, dynamic> data = {
-      "titulo": titulo,
-      "descripcion": descripcion,
-      "fecha": fecha,
-      "completado": completado
-    };
+  Future<TareaEntity> crearTarea(TareaParams params) async {
 
-    CollectionReference colRef = firestore.collection(TAREAS);
-
-    DocumentReference docRef = await colRef.add(data);
+    DocumentReference docRef = await crearTareaColRef.add(params);
 
     String id = docRef.id;
 
-    TareaEntity tareaEntity = TareaEntity(
+    TareaEntity tareaEntityObtenida = TareaEntity(
       id: id,
-      titulo: titulo,
-      descripcion: descripcion,
-      fecha: fecha,
-      completado: completado
+      titulo: params.titulo,
+      descripcion: params.descripcion,
+      fecha: DateTime.now(),
+      completado: params.completado
     );
 
-    return tareaEntity;
+    return tareaEntityObtenida;
   }
 
 }

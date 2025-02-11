@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class TareaEntity {
 
   String id;
@@ -13,5 +15,20 @@ class TareaEntity {
     required this.fecha,
     required this.completado
   });
+
+  factory TareaEntity.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final String snapId = snapshot.id;
+    final data = snapshot.data();
+    return TareaEntity(
+      id: snapId,
+      titulo: data?["titulo"],
+      descripcion: data?["descripcion"],
+      fecha: data?["fecha"],
+      completado: data?["completado"]
+    );
+  }
 
 }
