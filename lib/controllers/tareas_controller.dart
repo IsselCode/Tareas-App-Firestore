@@ -13,6 +13,16 @@ class TareasController extends ChangeNotifier {
 
   List<TareaEntity> tareas = <TareaEntity>[];
 
+  Future<void> obtenerTareaPorId(String id) async {
+
+    TareaEntity tarea = await tareaModel.obtenerTareaPorId(id);
+
+    tareas.add(tarea);
+
+    notifyListeners();
+
+  }
+
   Future<void> crearTarea(String titulo, String descripcion) async {
 
     TareaParams params = TareaParams(

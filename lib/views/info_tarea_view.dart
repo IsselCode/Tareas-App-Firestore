@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class InfoTareaView extends StatelessWidget {
 
@@ -7,14 +8,17 @@ class InfoTareaView extends StatelessWidget {
   final String descripcion;
   final DateTime fechaCreacion;
   final bool completado;
+  late String fechaFormateada;
 
-  const InfoTareaView({
+  InfoTareaView({
     super.key,
     required this.titulo,
     required this.descripcion,
     required this.fechaCreacion,
     required this.completado
-  });
+  }) {
+    fechaFormateada = DateFormat("dd-MM-y").format(fechaCreacion);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +63,7 @@ class InfoTareaView extends StatelessWidget {
                     children: [
                       RichTextPersonalizado(
                         titulo: "Fecha de creación",
-                        valor: fechaCreacion.toString()
+                        valor: fechaFormateada
                       ),
                       const SizedBox(height: 10,),
                       RichTextPersonalizado(

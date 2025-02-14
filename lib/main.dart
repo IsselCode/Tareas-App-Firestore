@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider(create: (context) => FirebaseFirestore.instance,),
         Provider<TareaModel>(create: (context) => TareaModel(firestore: context.read()),),
-        ChangeNotifierProvider(create: (context) => TareasController(tareaModel: context.read()),)
+        ChangeNotifierProvider(create: (context) => TareasController(tareaModel: context.read())..obtenerTareaPorId("bmUm5DK8otGFCXNKzBxi"),)
       ],
       builder: (context, child) => MaterialApp(
         title: 'Flutter Demo',

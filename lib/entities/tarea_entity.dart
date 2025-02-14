@@ -26,7 +26,7 @@ class TareaEntity {
       id: snapId,
       titulo: data?["titulo"],
       descripcion: data?["descripcion"],
-      fecha: data?["fecha"],
+      fecha: data?["fecha"].toDate(),
       completado: data?["completado"]
     );
   }

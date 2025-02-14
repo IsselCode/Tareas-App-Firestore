@@ -42,4 +42,16 @@ class TareaModel {
     return tareaEntityObtenida;
   }
 
+  Future<TareaEntity> obtenerTareaPorId(String id) async {
+
+    DocumentReference<TareaEntity> docRef = obtenerTareasColRef.doc(id);
+
+    DocumentSnapshot<TareaEntity> snap = await docRef.get();
+
+    TareaEntity tarea = snap.data()!;
+
+    return tarea;
+
+  }
+
 }
