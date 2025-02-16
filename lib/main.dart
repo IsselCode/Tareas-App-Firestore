@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider(create: (context) => FirebaseFirestore.instance,),
         Provider<TareaModel>(create: (context) => TareaModel(firestore: context.read()),),
-        ChangeNotifierProvider(create: (context) => TareasController(tareaModel: context.read())..obtenerTareaPorId("bmUm5DK8otGFCXNKzBxi"),)
+        ChangeNotifierProvider(create: (context) => TareasController(tareaModel: context.read())..obtenerTareas(EstadoDeTareas.todas))
       ],
       builder: (context, child) => MaterialApp(
         title: 'Flutter Demo',
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const TareasView(),
+        home: TareasView(),
       ),
     );
   }

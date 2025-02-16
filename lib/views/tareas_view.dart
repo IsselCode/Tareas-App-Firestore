@@ -10,13 +10,26 @@ import 'package:tareas_app/responses/dialogo_actualizar_tarea_response.dart';
 import 'package:tareas_app/responses/dialogo_crear_tarea_response.dart';
 import 'package:tareas_app/views/info_tarea_view.dart';
 
-class TareasView extends StatelessWidget {
-  const TareasView({super.key});
+enum EstadoDeTareas {
+  todas,
+  completadas,
+  noCompletadas
+}
+
+class TareasView extends StatefulWidget {
+  TareasView({super.key});
+
+  @override
+  State<TareasView> createState() => _TareasViewState();
+}
+
+class _TareasViewState extends State<TareasView> {
+  EstadoDeTareas opcionSeleccionada = EstadoDeTareas.todas;
 
   @override
   Widget build(BuildContext context) {
 
-    TareasController tareasController = context.read();
+    TareasController tareasController = context.watch();
 
     return Scaffold(
       backgroundColor: Color(0xffEBEBEB),
@@ -51,6 +64,46 @@ class TareasView extends StatelessWidget {
 
                 const SizedBox(height: 20,),
 
+                SegmentedButton(
+                  segments: [
+                    ButtonSegment(
+                      value: EstadoDeTareas.todas,
+                      label: Text("Todas")
+                    ),
+                    ButtonSegment(
+                      value: EstadoDeTareas.completadas,
+                      label: Text("Completadas")
+                    ),
+                    ButtonSegment(
+                      value: EstadoDeTareas.noCompletadas,
+                      label: Text("No Completadas")
+                    )
+                  ],
+                  style: SegmentedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                     borderRadius: BorderRadius.circular(8),
+                    ),
+                    side: BorderSide.none,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    selectedBackgroundColor: Color(0xff0F52FF),
+                    selectedForegroundColor: Colors.white,
+                  ),
+                  showSelectedIcon: false,
+                  onSelectionChanged: (Set p0) async {
+
+                    opcionSeleccionada = p0.first;
+
+                    await tareasController.obtenerTareas(p0.first);
+
+                    setState(() {});
+
+                  },
+                  selected: {opcionSeleccionada}
+                ),
+
+                const SizedBox(height: 20,),
+
                 Expanded(
                   child: ListView.separated(
                     itemCount: tareasController.tareas.length,
@@ -76,7 +129,7 @@ class TareasView extends StatelessWidget {
                             )
                           );
                         },
-                        actualizar: () => actualizarTarea(context, tarea.titulo, tarea.descripcion),
+                        actualizar: () => actualizarTarea(context, tarea),
                         eliminar: () => eliminarTarea(context, tarea.id),
                       );
                     },
@@ -109,22 +162,27 @@ class TareasView extends StatelessWidget {
 
   }
 
-  actualizarTarea(BuildContext context, String titulo, String descripcion) async {
+  actualizarTarea(BuildContext context, TareaEntity tarea) async {
 
     DialogoActualizarTareaResponse? valores = await showDialog(
       context: context,
-      builder: (context) => DialogoActualizarTarea(titulo: titulo, descripcion: descripcion),
+      builder: (context) => DialogoActualizarTarea(titulo: tarea.titulo, descripcion: tarea.descripcion),
     );
 
     if (valores != null){
-      print(valores.descripcion);
-      print(valores.titulo);
-      print(valores.tituloAnterior);
-      print(valores.descripcionAnterior);
+
+      TareasController tareasController = context.read();
+
+      await tareasController.actualizarTareaPorId(
+        tarea,
+        valores.titulo,
+        valores.descripcion
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("La tarea ${valores.tituloAnterior} fue actualizada a ${valores.titulo}"))
       );
+
     }
 
   }
@@ -141,7 +199,6 @@ class TareasView extends StatelessWidget {
     }
 
   }
-
 }
 
 
