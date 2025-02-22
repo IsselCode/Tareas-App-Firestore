@@ -93,4 +93,10 @@ class TareaModel {
 
   }
 
+  Future<void> eliminarDocumentoPorId(String id) async {
+
+    await crearTareaColRef.doc(id).delete();
+
+  }
+
 }

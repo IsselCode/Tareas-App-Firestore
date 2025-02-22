@@ -17,7 +17,7 @@ class InfoTareaView extends StatelessWidget {
     required this.fechaCreacion,
     required this.completado
   }) {
-    fechaFormateada = DateFormat("dd-MM-y").format(fechaCreacion);
+    fechaFormateada = DateFormat("dd-MM-y--hh-mm-ss").format(fechaCreacion);
   }
 
   @override

@@ -65,4 +65,10 @@ class TareasController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> eliminarDocumentoPorId(String id) async {
+
+    await tareaModel.eliminarDocumentoPorId(id);
+
+  }
+
 }

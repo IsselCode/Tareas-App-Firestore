@@ -195,7 +195,15 @@ class _TareasViewState extends State<TareasView> {
     );
 
     if (resultado != null){
-      print(resultado);
+
+      if (resultado) {
+
+        TareasController tareasController = context.read();
+
+        await tareasController.eliminarDocumentoPorId(id);
+
+      }
+
     }
 
   }

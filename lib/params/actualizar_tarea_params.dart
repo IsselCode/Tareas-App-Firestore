@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tareas_app/entities/tarea_entity.dart';
 
 class ActualizarTareaParams {
