@@ -1,5 +1,7 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:tareas_app/entities/tarea_entity.dart';
+import 'package:tareas_app/errors/failures.dart';
 import 'package:tareas_app/models/tarea_model.dart';
 import 'package:tareas_app/params/actualizar_tarea_params.dart';
 import 'package:tareas_app/params/tarea_params.dart';
@@ -14,14 +16,21 @@ class TareasController extends ChangeNotifier {
   });
 
   List<TareaEntity> tareas = <TareaEntity>[];
+  TareaEntity? tareaBuscada;
 
   Future<void> obtenerTareaPorId(String id) async {
 
-    TareaEntity tarea = await tareaModel.obtenerTareaPorId(id);
+    Either<TareasFailure, TareaEntity> response = await tareaModel.obtenerTareaPorId(id);
 
-    tareas.add(tarea);
-
-    notifyListeners();
+    response.fold(
+      (l) {
+        print(l);
+      },
+      (r) {
+        tareaBuscada = r;
+        notifyListeners();
+      },
+    );
 
   }
 
@@ -40,9 +49,17 @@ class TareasController extends ChangeNotifier {
       descripcion: descripcion,
     );
 
-    TareaEntity tareaEntity = await tareaModel.crearTarea(params);
+    Either<TareasFailure, TareaEntity> response = await tareaModel.crearTarea(params);
 
-    print(tareaEntity);
+    response.fold(
+      (TareasFailure failure) {
+        print(failure.message);
+      },
+      (TareaEntity nuevaTarea) {
+        tareas.add(nuevaTarea);
+        notifyListeners();
+      },
+    );
 
   }
 
